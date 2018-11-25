@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntl.topjobs.employeesignuplogin.model.EmployerLoginDetails;
 import com.ntl.topjobs.employeesignuplogin.model.EmployerSignupDetails;
+import com.ntl.topjobs.employeesignuplogin.model.SubscriptionFeeDetails;
 //import com.ntl.topjobs.employeesignuplogin.service.EmployeeProxyService;
 import com.ntl.topjobs.employeesignuplogin.service.ServiceClass;
 
@@ -55,13 +56,16 @@ public class Controller {
 	public Optional<EmployerLoginDetails> login(@PathVariable("id") String id, @PathVariable("password") String password) {
 		Optional<EmployerLoginDetails> tempLogin;
 		Optional<EmployerLoginDetails> temporaryLogin=serviceClass.getUser(id, password);
-		//boolean res=true;
-		//if (temporaryLogin!=null) {
+		
 			tempLogin=temporaryLogin;
-			//res=true;
-		//} else
-			//tempLogin=null;
+		
 	return tempLogin;
+	}
+	
+	@PostMapping("/employer/payfee")
+	public SubscriptionFeeDetails postFeeDetails(@RequestBody SubscriptionFeeDetails subscriptionFeeDetails)
+	{
+		return (serviceClass.addFeeDetails(subscriptionFeeDetails));
 	}
 
 }

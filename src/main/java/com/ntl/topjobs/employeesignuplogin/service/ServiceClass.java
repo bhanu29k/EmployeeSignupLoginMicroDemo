@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.ntl.topjobs.employeesignuplogin.dao.Dao;
 import com.ntl.topjobs.employeesignuplogin.dao.LoginDao;
+import com.ntl.topjobs.employeesignuplogin.dao.SubscriptionDao;
 import com.ntl.topjobs.employeesignuplogin.model.EmployerLoginDetails;
 import com.ntl.topjobs.employeesignuplogin.model.EmployerSignupDetails;
+import com.ntl.topjobs.employeesignuplogin.model.SubscriptionFeeDetails;
 
 /**
  * @author Training
@@ -25,8 +27,13 @@ public class ServiceClass {
 	Dao dao;
 	@Autowired
 	LoginDao loginDao;
+	@Autowired
+	SubscriptionDao subscriptionDao; 
 	
 	EmployerLoginDetails loginBean;
+	
+
+	SubscriptionFeeDetails subscriptionFeeDetails; 
 	
 	
 /**
@@ -38,6 +45,15 @@ public class ServiceClass {
 		this.loginDao=loginDao;
 	}
 	
+
+/**
+ * @param subscriptionDao
+ */
+public ServiceClass(SubscriptionDao subscriptionDao) {
+	super();
+	this.subscriptionDao = subscriptionDao;
+}
+
 
 /**
  * @param loginDao
@@ -94,5 +110,20 @@ public Optional<EmployerLoginDetails> getUser(String id,String password) {
 	else temporaryLogin=null;
 	return temporaryLogin;
 }
+
+public SubscriptionFeeDetails addFeeDetails(SubscriptionFeeDetails subscriptionFeeDetails) {
+	/*
+	
+	subscriptionFeeDetail=new SubscriptionFeeDetails();
+	subscriptionFeeDetail.setBankName(subscriptionFeeDetails.getBankName());
+	subscriptionFeeDetails.setCardName(subscriptionFeeDetails.getCardName());
+	subscriptionFeeDetails.setCardNo(subscriptionFeeDetails.getCardNo()); 
+	subscriptionFeeDetails.setEmpId(subscriptionFeeDetails.getEmpId());
+	subscriptionFeeDetails.setFee(subscriptionFeeDetails.getFee());	
+	*/
+	return subscriptionDao.save(subscriptionFeeDetails);  
+	
+}
+
 
 }

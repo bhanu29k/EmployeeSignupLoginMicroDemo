@@ -19,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ntl.topjobs.employeesignuplogin.model.EmployerLoginDetails;
 import com.ntl.topjobs.employeesignuplogin.model.EmployerSignupDetails;
+import com.ntl.topjobs.employeesignuplogin.model.SubscriptionFeeDetails;
 import com.ntl.topjobs.employeesignuplogin.service.ServiceClass;
 
 /**
@@ -33,6 +34,7 @@ public class ControllerTest {
 	Controller controller;
 	EmployerSignupDetails signupBean;
 	EmployerLoginDetails loginBean;
+	SubscriptionFeeDetails subscriptionFeeDetail;
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -82,7 +84,7 @@ public class ControllerTest {
 	/**
 	 * Test method for {@link com.ntl.topjobs.employeesignuplogin.controller.Controller#login(java.lang.String, java.lang.String)}.
 	 */
-	@Test
+	@Test 
 	public void testLogin() {
 		loginBean=new EmployerLoginDetails();
 		loginBean.setEmailId("bhanu29k@gmail.com");
@@ -95,4 +97,19 @@ public class ControllerTest {
 		
 	}
 
+	@Test
+	public void testPostFeeDetails()
+	{
+		subscriptionFeeDetail=new SubscriptionFeeDetails();
+		subscriptionFeeDetail.setBankName("Sbi");
+		subscriptionFeeDetail.setCardName("Debit");
+		subscriptionFeeDetail.setFee("300");
+		subscriptionFeeDetail.setCardNo("12345678");
+		subscriptionFeeDetail.setEmpId("bhanu29k");	
+		controller=new Controller(serviceClass);
+		when(serviceClass.addFeeDetails(subscriptionFeeDetail)).thenReturn(subscriptionFeeDetail);
+		assertEquals(subscriptionFeeDetail.getBankName(),controller.postFeeDetails(subscriptionFeeDetail).getBankName());
+	}
+	
+	
 }

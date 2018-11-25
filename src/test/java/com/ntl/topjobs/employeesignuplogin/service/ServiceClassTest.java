@@ -20,8 +20,10 @@ import java.util.Optional;
 
 import com.ntl.topjobs.employeesignuplogin.dao.Dao;
 import com.ntl.topjobs.employeesignuplogin.dao.LoginDao;
+import com.ntl.topjobs.employeesignuplogin.dao.SubscriptionDao;
 import com.ntl.topjobs.employeesignuplogin.model.EmployerLoginDetails;
 import com.ntl.topjobs.employeesignuplogin.model.EmployerSignupDetails;
+import com.ntl.topjobs.employeesignuplogin.model.SubscriptionFeeDetails;
 
 /**
  * @author Training
@@ -32,13 +34,15 @@ public class ServiceClassTest {
 
 	ServiceClass serviceClass;
 	ServiceClass serviceClass1;
+	SubscriptionFeeDetails subscriptionFeeDetail;
 	
 	EmployerSignupDetails signupBean;
 	EmployerSignupDetails signupBeanTemp;	
 	EmployerLoginDetails loginBean;
 	@Mock
 	Dao dao;
-	
+	@Mock
+	SubscriptionDao subscriptionDao;
 	@Mock
 	LoginDao loginDao;
 	
@@ -102,10 +106,11 @@ public class ServiceClassTest {
 		when(loginDao.save(loginBean)).thenReturn(loginBean);
 		when(dao.save(signupBean)).thenReturn(signupBean);
 		when(dao.findByEmailId(signupBean.getEmailId())).thenReturn(0);	
-		when(dao.findByEmailId(signupBeanTemp.getEmailId())).thenReturn(1);	
+			
 		serviceClass=new ServiceClass(dao,loginDao);
 		assertEquals(signupBean.getEmailId(),serviceClass.addEmployee(signupBean).getEmailId());
-		assertEquals(null,serviceClass.addEmployee(signupBeanTemp).getEmailId());
+		when(dao.findByEmailId(signupBeanTemp.getEmailId())).thenReturn(1);
+		assertEquals(null,serviceClass.addEmployee(signupBeanTemp));
 	}
 
 	/**
@@ -120,9 +125,24 @@ public class ServiceClassTest {
 		when(loginDao.findById(loginBean.getEmpId())).thenReturn(Optional.of(loginBean));
 		serviceClass=new ServiceClass(loginDao);
 		assertEquals("bhanu29k@gmail.com",serviceClass.getUser("bhanu29k", "Bhanu@123").get().getEmailId());
-		assertEquals(null,serviceClass.getUser("bhanu29k", "Bhanu@12").get().getEmailId());
-		assertEquals(null,serviceClass.getUser("bhanu29", "Bhanu@123").get().getEmailId());
+		assertEquals(null,serviceClass.getUser("bhanu29k", "Bhanu@12"));
+		assertEquals(null,serviceClass.getUser("bhanu29", "Bhanu@123"));
 		
 	}
+	
+	@Test
+	public void testAddFeeDetails()
+	{
+		subscriptionFeeDetail=new SubscriptionFeeDetails();
+		subscriptionFeeDetail.setBankName("Sbi");
+		subscriptionFeeDetail.setCardName("Debit");
+		subscriptionFeeDetail.setFee("300");
+		subscriptionFeeDetail.setCardNo("12345678");
+		subscriptionFeeDetail.setEmpId("bhanu29k");	
+		when(subscriptionDao.save(subscriptionFeeDetail)).thenReturn(subscriptionFeeDetail);
+		serviceClass=new ServiceClass(subscriptionDao);
+		assertEquals(subscriptionFeeDetail.getBankName(),serviceClass.addFeeDetails(subscriptionFeeDetail).getBankName());	
+	}
+	
 
 }
